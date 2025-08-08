@@ -1,15 +1,19 @@
 from flask import Flask, request, render_template, jsonify, send_from_directory
 from resemblyzer import VoiceEncoder, preprocess_wav
 from werkzeug.utils import secure_filename
+from werkzeug.middleware.proxy_fix import ProxyFix
 from pydub import AudioSegment
 import soundfile as sf
 import numpy as np
 import os
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['UPLOAD_FOLDER'] = os.path.join(os.getenv('UPLOAD_FOLDER', '/tmp'), 'vocary_uploads')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB limit
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+# Fix for Render's proxy
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
 def convert_to_wav(file_path):
     base, ext = os.path.splitext(file_path)
@@ -81,4 +85,5 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)

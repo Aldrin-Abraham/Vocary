@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocary - Your Results</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/results.css">
+</head>
+<body>
+    <!-- Space Background -->
+    <div class="constellation" id="constellation"></div>
+    <div class="gradient-overlay"></div>
+
+    <!-- Navigation -->
+    <nav class="results-nav">
+        <div class="nav-container">
+            <a href="/" class="logo-link">
+                <img src="/static/images/logo.png" alt="Vocary Logo" class="logo">
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="/analyzer" class="nav-link"><i class="fas fa-redo"></i> New Analysis</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="results-container">
+        <header class="results-header">
+            <h1 class="gradient-text">Your <span id="analysisType">Analysis</span> Results</h1>
+            <p class="subtitle">Brace yourself</p>
+        </header>
+
+        <div class="results-content">
+            <!-- Score Display -->
+            <div class="score-display">
+                <div class="score-value" id="scoreValue">0%</div>
+                <div class="score-label" id="scoreLabel">Delusion Level</div>
+            </div>
+
+            <!-- Main Result -->
+            <div class="main-result" id="mainResult">
+                <div class="result-icon">
+                    <i class="fas fa-user-astronaut"></i>
+                </div>
+                <h2 id="resultTitle">Loading Results...</h2>
+                <p id="resultDescription">Please wait while we calculate your disappointment</p>
+            </div>
+
+            <!-- Visualizations -->
+            <div class="visualizations">
+                <div class="visualization-card" id="viz1">
+                    <h3><i class="fas fa-chart-line"></i> <span id="viz1Title">Pitch Accuracy</span></h3>
+                    <div class="viz-container" id="viz1Container"></div>
+                </div>
+                <div class="visualization-card" id="viz2">
+                    <h3><i class="fas fa-sliders-h"></i> <span id="viz2Title">Timbre Analysis</span></h3>
+                    <div class="viz-container" id="viz2Container"></div>
+                </div>
+            </div>
+
+            <!-- Detailed Feedback -->
+            <div class="feedback-section">
+                <h3><i class="fas fa-comment-alt"></i> Brutal Honesty</h3>
+                <div class="feedback-points" id="feedbackPoints"></div>
+            </div>
+
+            <!-- Share Options -->
+            <div class="share-section">
+                <h3><i class="fas fa-share-alt"></i> Share Your Shame</h3>
+                <div class="share-buttons">
+                    <button class="share-button twitter">
+                        <i class="fab fa-twitter"></i> Twitter
+                    </button>
+                    <button class="share-button instagram">
+                        <i class="fab fa-instagram"></i> Instagram
+                    </button>
+                    <button class="share-button copy-link">
+                        <i class="fas fa-link"></i> Copy Link
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/static/js/results.js"></script>
+</body>
+</html>

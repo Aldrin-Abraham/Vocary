@@ -1,9 +1,8 @@
+import os
 import numpy as np
 from flask import Flask, request, render_template, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 from werkzeug.middleware.proxy_fix import ProxyFix
-import os
-import librosa
 from audio_analysis.pitch import analyze_pitch
 from audio_analysis.timbre import analyze_timbre
 from audio_analysis.similarity import compare_voices

@@ -1,3 +1,5 @@
+import werkzeug
+werkzeug.__version__ = '2.0.3' 
 from flask import Flask, request, render_template, jsonify, send_from_directory
 from resemblyzer import VoiceEncoder, preprocess_wav
 from werkzeug.utils import secure_filename
@@ -16,6 +18,7 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
 def convert_to_wav(file_path):
+    """Convert audio files to WAV format"""
     base, ext = os.path.splitext(file_path)
     wav_path = base + ".wav"
     if ext.lower() == '.mp3':
@@ -25,11 +28,13 @@ def convert_to_wav(file_path):
     return file_path
 
 def get_embedding(file_path):
+    """Generate voice embedding using Resemblyzer"""
     encoder = VoiceEncoder()
     wav = preprocess_wav(file_path)
     return encoder.embed_utterance(wav)
 
 def compare_embeddings(song_path, user_path):
+    """Compare voice embeddings and return similarity score"""
     song_embed = get_embedding(song_path)
     user_embed = get_embedding(user_path)
     similarity = np.inner(song_embed, user_embed)
@@ -51,17 +56,18 @@ def upload():
         return jsonify({'error': 'No selected file'}), 400
 
     try:
+        # Save files
         song_path = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(song_file.filename))
         user_path = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(user_file.filename))
-
         song_file.save(song_path)
         user_file.save(user_path)
 
+        # Process files
         song_path = convert_to_wav(song_path)
         user_path = convert_to_wav(user_path)
-
         score = compare_embeddings(song_path, user_path)
 
+        # Generate feedback
         if score > 85:
             feedback = "✅ Excellent match! Your voice closely resembles the singer."
         elif score > 70:

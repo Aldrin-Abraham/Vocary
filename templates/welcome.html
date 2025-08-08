@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocary - Advanced Vocal Analysis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/welcome.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="constelacao" id="constellation"></div>
+    <div class="gradient-overlay"></div>
+
+    <div class="welcome-container">
+        <header class="welcome-header">
+            <img src="/static/images/logo.png" alt="Vocary Logo" class="logo">
+            <h1 class="gradient-text">Welcome to Vocary</h1>
+            <p class="tagline">Your comprehensive vocal analysis platform</p>
+        </header>
+
+        <section class="intro-section">
+            <div class="intro-content">
+                <h2>Discover the power of your voice</h2>
+                <p>Vocary uses advanced audio processing and machine learning to analyze every aspect of your vocal performance. Whether you're a singer, podcaster, or just curious about your voice, we provide detailed insights to help you understand and improve.</p>
+                <div class="cta-buttons">
+                    <a href="/analyzer" class="cta-button primary">Get Started</a>
+                    <a href="#features" class="cta-button secondary">Learn More</a>
+                </div>
+            </div>
+            <div class="intro-image">
+                <img src="/static/images/voice-wave.png" alt="Voice analysis visualization">
+            </div>
+        </section>
+
+        <section id="features" class="features-section">
+            <h2>Explore Our Vocal Tools</h2>
+            <div class="feature-grid">
+                <div class="feature-card" onclick="location.href='/similarity'">
+                    <div class="feature-icon"><i class="fas fa-people-arrows"></i></div>
+                    <h3>Voice Similarity</h3>
+                    <p>Compare your voice to famous singers and get a similarity score</p>
+                </div>
+                
+                <div class="feature-card" onclick="location.href='/pitch'">
+                    <div class="feature-icon"><i class="fas fa-wave-square"></i></div>
+                    <h3>Pitch Analysis</h3>
+                    <p>Visualize your pitch accuracy and identify off-key moments</p>
+                </div>
+                
+                <div class="feature-card" onclick="location.href='/timbre'">
+                    <div class="feature-icon"><i class="fas fa-sliders-h"></i></div>
+                    <h3>Timbre Analysis</h3>
+                    <p>Understand the unique color and texture of your voice</p>
+                </div>
+                
+                <div class="feature-card" onclick="location.href='/range'">
+                    <div class="feature-icon"><i class="fas fa-arrows-alt-v"></i></div>
+                    <h3>Vocal Range</h3>
+                    <p>Map your complete singing range and identify your voice type</p>
+                </div>
+                
+                <div class="feature-card" onclick="location.href='/multi-voice'">
+                    <div class="feature-icon"><i class="fas fa-users"></i></div>
+                    <h3>Multi-Voice Detection</h3>
+                    <p>Identify how many distinct voices are present in an audio clip</p>
+                </div>
+                
+                <div class="feature-card" onclick="location.href='/emotion'">
+                    <div class="feature-icon"><i class="fas fa-smile"></i></div>
+                    <h3>Emotion Detection</h3>
+                    <p>Analyze the emotional tone and delivery of vocal performances</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="demo-section">
+            <h2>How It Works</h2>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Record or Upload</h3>
+                    <p>Use our in-browser recorder or upload an existing audio file</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Choose Analysis</h3>
+                    <p>Select from our suite of vocal analysis tools</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Get Insights</h3>
+                    <p>Receive detailed feedback and visualizations</p>
+                </div>
+            </div>
+            <a href="/analyzer" class="cta-button primary">Start Analyzing</a>
+        </section>
+
+        <footer class="welcome-footer">
+            <p>© 2023 Vocary | Advanced Vocal Analysis Platform</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/static/js/welcome.js"></script>
+</body>
+</html>

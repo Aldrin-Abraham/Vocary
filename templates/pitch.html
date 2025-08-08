@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocary - Pitch Analysis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/pitch.css">
+</head>
+<body>
+    <div class="constelacao" id="constellation"></div>
+    <div class="gradient-overlay"></div>
+
+    <div class="container">
+        <header>
+            <img src="/static/images/logo.png" alt="Vocary Logo" class="logo">
+            <h1 class="gradient-text">Pitch Analysis</h1>
+            <p>Analyze your vocal pitch accuracy and characteristics</p>
+        </header>
+
+        <main class="main-content">
+            <div class="upload-box">
+                <h2><i class="fas fa-microphone"></i> Your Recording</h2>
+                <p>Record or upload your voice for pitch analysis</p>
+                <button id="recordBtn" class="record-btn">
+                    <i class="fas fa-microphone"></i> Start Recording
+                </button>
+                <audio id="userAudio" controls class="audio-preview"></audio>
+                <div class="or-divider">OR</div>
+                <input type="file" id="audioInput" accept=".wav,.mp3" class="file-input">
+                <div class="file-info" id="audioFileInfo">No file selected</div>
+            </div>
+
+            <button id="pitchBtn" class="analyze-btn" disabled>
+                <i class="fas fa-wave-square"></i> Analyze Pitch
+            </button>
+
+            <div class="result-container" id="resultContainer">
+                <div class="result-placeholder">
+                    <i class="fas fa-music"></i>
+                    <p>Your pitch analysis results will appear here</p>
+                </div>
+            </div>
+
+            <div class="visualization-container" id="pitchVisualization">
+                <!-- Pitch contour visualization will be rendered here -->
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/static/js/recorder.js"></script>
+    <script src="/static/js/pitch.js"></script>
+</body>
+</html>

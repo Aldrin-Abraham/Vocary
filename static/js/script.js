@@ -1,55 +1,44 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const songInput = document.getElementById('songInput');
-    const userFileInput = document.getElementById('userFileInput');
-    const recordBtn = document.getElementById('recordBtn');
-    const userAudio = document.getElementById('userAudio');
-    const analyzeBtn = document.getElementById('analyzeBtn');
-    const resultContainer = document.getElementById('resultContainer');
-    const songFileInfo = document.getElementById('songFileInfo');
-    const userFileInfo = document.getElementById('userFileInfo');
-    
-    let mediaRecorder;
-    let audioChunks = [];
-    let userBlob = null;
-    
-    // Update file info display
-    songInput.addEventListener('change', function() {
-        if (this.files.length > 0) {
-            songFileInfo.textContent = this.files[0].name;
-            checkFilesReady();
-        } else {
-            songFileInfo.textContent = 'No file selected';
+// Main application controller
+class VocaryApp {
+    constructor() {
+        this.initRecording();
+        this.initFileUploads();
+        this.initAnalysisButtons();
+        this.initNavigation();
+    }
+
+    initRecording() {
+        this.mediaRecorder = null;
+        this.audioChunks = [];
+        this.userBlob = null;
+        
+        const recordBtn = document.getElementById('recordBtn');
+        if (recordBtn) {
+            recordBtn.addEventListener('click', this.toggleRecording.bind(this));
         }
-    });
-    
-    userFileInput.addEventListener('change', function() {
-        if (this.files.length > 0) {
-            userFileInfo.textContent = this.files[0].name;
-            userBlob = this.files[0];
-            checkFilesReady();
-        } else {
-            userFileInfo.textContent = 'No file selected';
-        }
-    });
-    
-    // Recording functionality
-    recordBtn.addEventListener('click', async function() {
-        if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+    }
+
+    async toggleRecording() {
+        const recordBtn = document.getElementById('recordBtn');
+        const userFileInput = document.getElementById('userFileInput');
+        const userAudio = document.getElementById('userAudio');
+        
+        if (!this.mediaRecorder || this.mediaRecorder.state === 'inactive') {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                mediaRecorder = new MediaRecorder(stream);
-                audioChunks = [];
+                this.mediaRecorder = new MediaRecorder(stream);
+                this.audioChunks = [];
                 
-                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-                mediaRecorder.onstop = () => {
-                    userBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                    const audioUrl = URL.createObjectURL(userBlob);
+                this.mediaRecorder.ondataavailable = e => this.audioChunks.push(e.data);
+                this.mediaRecorder.onstop = () => {
+                    this.userBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(this.userBlob);
                     userAudio.src = audioUrl;
-                    userFileInfo.textContent = 'Recording.wav';
-                    checkFilesReady();
+                    document.getElementById('userFileInfo').textContent = 'Recording.wav';
+                    this.checkFilesReady();
                 };
                 
-                mediaRecorder.start();
+                this.mediaRecorder.start();
                 recordBtn.classList.add('recording');
                 recordBtn.innerHTML = '<i class="fas fa-stop"></i> Stop Recording';
                 userFileInput.disabled = true;
@@ -57,26 +46,78 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Error accessing microphone: ' + err.message);
             }
         } else {
-            mediaRecorder.stop();
-            mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            this.mediaRecorder.stop();
+            this.mediaRecorder.stream.getTracks().forEach(track => track.stop());
             recordBtn.classList.remove('recording');
             recordBtn.innerHTML = '<i class="fas fa-microphone"></i> Start Recording';
             userFileInput.disabled = false;
         }
-    });
-    
-    // Check if files are ready for analysis
-    function checkFilesReady() {
-        if (songInput.files.length > 0 && (userBlob || userFileInput.files.length > 0)) {
-            analyzeBtn.disabled = false;
-        } else {
-            analyzeBtn.disabled = true;
+    }
+
+    initFileUploads() {
+        const songInput = document.getElementById('songInput');
+        const userFileInput = document.getElementById('userFileInput');
+        
+        if (songInput) {
+            songInput.addEventListener('change', function() {
+                const infoElement = document.getElementById('songFileInfo');
+                if (this.files.length > 0) {
+                    infoElement.textContent = this.files[0].name;
+                    this.checkFilesReady();
+                } else {
+                    infoElement.textContent = 'No file selected';
+                }
+            });
+        }
+        
+        if (userFileInput) {
+            userFileInput.addEventListener('change', function() {
+                const infoElement = document.getElementById('userFileInfo');
+                if (this.files.length > 0) {
+                    infoElement.textContent = this.files[0].name;
+                    this.userBlob = this.files[0];
+                    this.checkFilesReady();
+                } else {
+                    infoElement.textContent = 'No file selected';
+                }
+            });
         }
     }
-    
-    // Analyze button handler
-    analyzeBtn.addEventListener('click', async function() {
-        if (!songInput.files[0] || !userBlob) {
+
+    checkFilesReady() {
+        const songInput = document.getElementById('songInput');
+        const userFileInput = document.getElementById('userFileInput');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        
+        if (songInput && analyzeBtn) {
+            const hasUserAudio = this.userBlob || (userFileInput?.files.length > 0);
+            analyzeBtn.disabled = !(songInput.files.length > 0 && hasUserAudio);
+        }
+    }
+
+    initAnalysisButtons() {
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        if (analyzeBtn) {
+            analyzeBtn.addEventListener('click', this.analyzeSimilarity.bind(this));
+        }
+        
+        const pitchBtn = document.getElementById('pitchBtn');
+        if (pitchBtn) {
+            pitchBtn.addEventListener('click', this.analyzePitch.bind(this));
+        }
+        
+        const timbreBtn = document.getElementById('timbreBtn');
+        if (timbreBtn) {
+            timbreBtn.addEventListener('click', this.analyzeTimbre.bind(this));
+        }
+    }
+
+    async analyzeSimilarity() {
+        const songInput = document.getElementById('songInput');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const resultContainer = document.getElementById('resultContainer');
+        
+        if (!songInput.files[0] || !this.userBlob) {
             alert('Please upload a song file and record/upload your voice.');
             return;
         }
@@ -87,9 +128,9 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const formData = new FormData();
             formData.append('song', songInput.files[0]);
-            formData.append('user', userBlob, 'recording.wav');
+            formData.append('user', this.userBlob, 'recording.wav');
             
-            const response = await fetch('/upload', {
+            const response = await fetch('/api/analyze/similarity', {
                 method: 'POST',
                 body: formData
             });
@@ -100,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error(result.error);
             }
             
-            displayResults(result);
+            this.displayResults(result);
         } catch (error) {
             resultContainer.innerHTML = `
                 <div class="error-message">
@@ -113,17 +154,59 @@ document.addEventListener('DOMContentLoaded', function() {
             analyzeBtn.disabled = false;
             analyzeBtn.innerHTML = '<i class="fas fa-chart-line"></i> Analyze Similarity';
         }
-    });
-    
-    // Display results
-    function displayResults(result) {
+    }
+
+    async analyzePitch() {
+        const audioInput = document.getElementById('audioInput');
+        const pitchBtn = document.getElementById('pitchBtn');
+        const resultContainer = document.getElementById('resultContainer');
+        
+        if (!audioInput.files[0]) {
+            alert('Please upload or record an audio file.');
+            return;
+        }
+        
+        pitchBtn.disabled = true;
+        pitchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+        
+        try {
+            const formData = new FormData();
+            formData.append('audio', audioInput.files[0]);
+            
+            const response = await fetch('/api/analyze/pitch', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (result.error) {
+                throw new Error(result.error);
+            }
+            
+            this.displayPitchResults(result);
+        } catch (error) {
+            resultContainer.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Error</h3>
+                    <p>${error.message || 'An error occurred during analysis'}</p>
+                </div>
+            `;
+        } finally {
+            pitchBtn.disabled = false;
+            pitchBtn.innerHTML = '<i class="fas fa-wave-square"></i> Analyze Pitch';
+        }
+    }
+
+    displayResults(result) {
         let feedbackClass = '';
         if (result.score > 85) feedbackClass = 'excellent';
         else if (result.score > 70) feedbackClass = 'good';
         else if (result.score > 50) feedbackClass = 'partial';
         else feedbackClass = 'low';
         
-        resultContainer.innerHTML = `
+        document.getElementById('resultContainer').innerHTML = `
             <div class="result-content">
                 <h2>Analysis Results</h2>
                 <div class="score-display">${result.score}%</div>
@@ -131,10 +214,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     ${result.feedback}
                 </div>
                 <div class="result-details">
-                    <p>Original song: ${songInput.files[0].name}</p>
-                    <p>Your recording: ${userFileInfo.textContent}</p>
+                    <p>Original song: ${document.getElementById('songInput').files[0].name}</p>
+                    <p>Your recording: ${document.getElementById('userFileInfo').textContent}</p>
                 </div>
             </div>
         `;
     }
+
+    displayPitchResults(result) {
+        // Implementation for displaying pitch analysis results
+        // Including visualization of pitch contour, note distribution, etc.
+    }
+}
+
+// Initialize the application when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    new VocaryApp();
 });

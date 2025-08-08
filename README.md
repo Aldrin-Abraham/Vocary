@@ -12,26 +12,23 @@
 - Team Lead: Aldrin Abraham - SSET
 
 ### Project Description
-[2-3 lines about what your project does]
+Vocary is a voice similarity analyzer that compares your vocal recordings with professional singers' tracks to determine how closely your voice matches theirs. Using advanced audio processing and machine learning, it provides a similarity score and fun feedback about your vocal prowess.
 
 ### The Problem (that doesn't exist)
-[What ridiculous problem are you solving?]
+Ever wondered if you sound like your favorite pop star while singing in the shower? Most people don't care, but now you can obsess over quantitative validation of your vocal delusions!
 
 ### The Solution (that nobody asked for)
-[How are you solving it? Keep it fun!]
+Vocary analyzes voice embeddings using neural networks to give you a percentage match score. It's like a facial recognition system, but for your questionable singing voice - complete with colorful feedback about your vocal similarities (or lack thereof).
 
 ## Technical Details
 ### Technologies/Components Used
 For Software:
-- [Languages used]
-- [Frameworks used]
-- [Libraries used]
-- [Tools used]
-
-For Hardware:
-- [List main components]
-- [List specifications]
-- [List tools required]
+- Python (Flask backend)
+- JavaScript (frontend interaction)
+- Resemblyzer (voice embedding library)
+- Pydub (audio processing)
+- Web Audio API (browser recording)
+- HTML/CSS (space-themed UI)
 
 ### Implementation
 For Software:

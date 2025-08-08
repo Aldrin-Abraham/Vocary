@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocary - Voice Similarity Analyzer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="constelacao" id="constellation"></div>
+    <div class="gradient-overlay"></div>
+
+    <div class="container">
+        <header>
+            <img src="/static/images/logo.png" alt="Vocary Logo" class="logo">
+            <h1 class="gradient-text">Voice Similarity Analyzer</h1>
+            <p>See how closely your voice matches your favorite singers</p>
+        </header>
+
+        <main class="main-content">
+            <div class="upload-section">
+                <div class="upload-box">
+                    <h2><i class="fas fa-music"></i> Original Song</h2>
+                    <p>Upload the original vocal track (MP3/WAV)</p>
+                    <input type="file" id="songInput" accept=".wav,.mp3" class="file-input">
+                    <div class="file-info" id="songFileInfo">No file selected</div>
+                </div>
+
+                <div class="upload-box">
+                    <h2><i class="fas fa-microphone"></i> Your Recording</h2>
+                    <p>Record or upload your voice</p>
+                    <button id="recordBtn" class="record-btn">
+                        <i class="fas fa-microphone"></i> Start Recording
+                    </button>
+                    <audio id="userAudio" controls class="audio-preview"></audio>
+                    <div class="or-divider">OR</div>
+                    <input type="file" id="userFileInput" accept=".wav,.mp3" class="file-input">
+                    <div class="file-info" id="userFileInfo">No file selected</div>
+                </div>
+            </div>
+
+            <button id="analyzeBtn" class="analyze-btn" disabled>
+                <i class="fas fa-chart-line"></i> Analyze Similarity
+            </button>
+
+            <div class="result-container" id="resultContainer">
+                <div class="result-placeholder">
+                    <i class="fas fa-wave-square"></i>
+                    <p>Your analysis results will appear here</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Space background animation (same as your portfolio)
+        document.addEventListener('DOMContentLoaded', function() {
+            const constellation = document.getElementById('constellation');
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            
+            // Create stars
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.className = 'estrela';
+                
+                const left = Math.random() * width;
+                const top = Math.random() * height;
+                const size = Math.floor(Math.random() * 3) + 1;
+                const opacity = Math.floor(Math.random() * 3) + 1;
+                const style = Math.floor(Math.random() * 4) + 1;
+                
+                star.style.left = `${left}px`;
+                star.style.top = `${top}px`;
+                star.classList.add(`tam${size}`);
+                star.classList.add(`opacity${opacity}`);
+                star.classList.add(`style${style}`);
+                
+                constellation.appendChild(star);
+            }
+            
+            // Create meteors
+            function createMeteor() {
+                const meteor = document.createElement('div');
+                meteor.className = 'meteoro';
+                const style = Math.floor(Math.random() * 4) + 1;
+                meteor.classList.add(`style${style}`);
+                constellation.appendChild(meteor);
+                
+                setTimeout(() => meteor.remove(), 1000);
+            }
+            
+            setInterval(createMeteor, 2000);
+            
+            for (let i = 0; i < 3; i++) {
+                setTimeout(createMeteor, i * 500);
+            }
+        });
+    </script>
+    
+    <script src="/static/js/recorder.js"></script>
+    <script src="/static/js/script.js"></script>
+</body>
+</html>

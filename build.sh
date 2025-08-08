@@ -1,4 +1,4 @@
 #!/bin/bash
 pip install --upgrade pip
-pip install -r requirements.txt --no-deps
-pip install click itsdangerous 
+pip install numpy==1.22.0 --no-deps
+pip install -r requirements.txt

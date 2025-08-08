@@ -1,12 +1,15 @@
+import numpy as np
+assert np.__version__ >= '1.22.0', f"Need NumPy 1.22+, got {np.__version__}"
+
 import werkzeug
 werkzeug.__version__ = '2.0.3' 
+
 from flask import Flask, request, render_template, jsonify, send_from_directory
 from resemblyzer import VoiceEncoder, preprocess_wav
 from werkzeug.utils import secure_filename
 from werkzeug.middleware.proxy_fix import ProxyFix
 from pydub import AudioSegment
 import soundfile as sf
-import numpy as np
 import os
 
 app = Flask(__name__)

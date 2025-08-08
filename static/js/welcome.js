@@ -4,6 +4,7 @@ class VocaryWelcome {
     this.initEventListeners();
     this.initAnimations();
     this.initTestimonialSlider();
+    this.initSpaceBackground();
   }
 
   initElements() {
@@ -54,6 +55,43 @@ class VocaryWelcome {
         icon.style.transform = '';
       });
     });
+  }
+
+  initSpaceBackground() {
+    const constellation = document.querySelector('.constellation');
+    if (!constellation) return;
+
+    // Create stars
+    for (let i = 0; i < 250; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      
+      // Random size (1-3px)
+      const size = Math.floor(Math.random() * 3) + 1;
+      star.style.setProperty('--star-size', `${size}px`);
+      
+      // Random position
+      star.style.top = `${Math.random() * 100}%`;
+      star.style.left = `${Math.random() * 100}%`;
+      
+      // Random twinkle properties
+      star.style.setProperty('--twinkle-duration', `${3 + Math.random() * 4}s`);
+      star.style.setProperty('--twinkle-opacity', `${0.3 + Math.random() * 0.5}`);
+      
+      // Add some colorful stars
+      if (Math.random() > 0.9) {
+        star.style.backgroundColor = `hsl(${Math.random() * 60 + 200}, 100%, 80%)`;
+      }
+      
+      constellation.appendChild(star);
+    }
+
+    // Create meteors
+    for (let i = 1; i <= 3; i++) {
+      const meteor = document.createElement('div');
+      meteor.className = `meteor m${i} style${i}`;
+      constellation.appendChild(meteor);
+    }
   }
 
   initAnimations() {

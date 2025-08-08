@@ -1,0 +1,85 @@
+/* Pitch Container */
+.pitch-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+.pitch-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-top: 2rem;
+  animation: fadeIn 1s ease;
+}
+
+.pitch-header h1 {
+  font-size: 2.8rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 10px rgba(157, 78, 221, 0.3);
+}
+
+.pitch-header .subtitle {
+  color: var(--space-text-light);
+  font-size: 1.2rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Recording Section */
+.recording-section {
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+
+.recording-card {
+  background: rgba(0, 20, 40, 0.7);
+  border: 1px solid var(--space-purple);
+  border-radius: 15px;
+  padding: 2rem;
+  backdrop-filter: blur(5px);
+}
+
+.recording-card h3 {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Results Section */
+.pitch-results {
+  background: rgba(0, 20, 40, 0.7);
+  border: 1px solid var(--space-purple);
+  border-radius: 15px;
+  padding: 2rem;
+  margin-top: 2rem;
+  backdrop-filter: blur(5px);
+}
+
+.pitch-graph {
+  height: 300px;
+  width: 100%;
+  margin: 2rem 0;
+}
+
+.pitch-feedback {
+  background: rgba(0, 10, 30, 0.5);
+  border: 1px solid var(--space-purple);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .pitch-header h1 {
+    font-size: 2rem;
+  }
+  
+  .pitch-header .subtitle {
+    font-size: 1rem;
+  }
+}

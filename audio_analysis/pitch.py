@@ -2,21 +2,33 @@ import numpy as np
 import librosa
 from typing import Dict, Any
 from random import random, choice
+from .utils import load_audio
 
 def analyze_pitch(audio_path: str) -> Dict[str, Any]:
     """Analyze pitch characteristics with humorous feedback"""
     try:
-        # Load audio file
-        y, sr = librosa.load(audio_path)
+        y, sr = load_audio(audio_path)
         
         # Extract pitch using YIN algorithm
         pitches, magnitudes = librosa.piptrack(y=y, sr=sr)
         pitch = pitches[pitches > 0]  # Filter out zero values
         
+        if len(pitch) == 0:
+            return {
+                'status': 'error',
+                'error': 'No pitch detected',
+                'feedback': "We couldn't detect any pitch. Were you singing or just breathing heavily?"
+            }
+        
         # Convert to musical notes
         notes = [librosa.hz_to_note(p) for p in pitch]
         
-        # Generate funny feedback
+        # Calculate statistics
+        pitch_mean = np.mean(pitch)
+        pitch_std = np.std(pitch)
+        pitch_range = np.max(pitch) - np.min(pitch)
+        
+        # Generate feedback
         feedback = generate_pitch_feedback(pitch)
         
         return {
@@ -24,9 +36,14 @@ def analyze_pitch(audio_path: str) -> Dict[str, Any]:
             'pitch_contour': pitch.tolist(),
             'notes': notes,
             'feedback': feedback,
-            'accuracy': min(100, max(0, int(90 - (np.std(pitch) / 50 * 100)))),
+            'accuracy': min(100, max(0, int(90 - (pitch_std / 50 * 100)))),
             'vibrato': f"{random() * 3 + 1:.1f} Hz",
-            'note_distribution': get_note_distribution(notes)
+            'note_distribution': get_note_distribution(notes),
+            'stats': {
+                'mean_pitch': float(pitch_mean),
+                'pitch_std': float(pitch_std),
+                'pitch_range': float(pitch_range)
+            }
         }
     except Exception as e:
         return {
@@ -40,13 +57,29 @@ def generate_pitch_feedback(pitch: np.ndarray) -> str:
     pitch_std = np.std(pitch)
     
     if pitch_std < 10:
-        return "Robotic perfection! Are you a vocoder?"
+        return choice([
+            "Robotic perfection! Are you a vocoder?",
+            "Autotune called, it wants its job back",
+            "Uncanny valley of pitch accuracy"
+        ])
     elif pitch_std < 30:
-        return "Not bad! Your shower performances are probably decent"
+        return choice([
+            "Not bad! Your shower performances are probably decent",
+            "Occasionally hits notes - like a broken clock is right twice a day",
+            "Your pitch is like a GPS with occasional wrong turns"
+        ])
     elif pitch_std < 60:
-        return "Occasionally hits notes. Like a drunk dart player"
+        return choice([
+            "Occasionally hits notes. Like a drunk dart player",
+            "Your pitch accuracy is... ambitious",
+            "Were you going for avant-garde jazz?"
+        ])
     else:
-        return "Were you singing or demonstrating whale calls?"
+        return choice([
+            "Were you singing or demonstrating whale calls?",
+            "This is why aliens won't talk to us",
+            "Your pitch is more unpredictable than the stock market"
+        ])
 
 def get_note_distribution(notes: list) -> Dict[str, float]:
     """Calculate frequency of each note with funny interpretations"""
@@ -58,9 +91,23 @@ def get_note_distribution(notes: list) -> Dict[str, float]:
         'most_common': max(counts, key=counts.get),
         'least_common': min(counts, key=counts.get),
         'distribution': {note: count/total for note, count in counts.items()},
-        'interpretation': choice([
-            "Your vocal range is... interesting",
-            "Someone clearly has favorite notes",
-            "This note distribution would make Bach cry"
-        ])
+        'interpretation': generate_note_interpretation(counts)
     }
+
+def generate_note_interpretation(counts: dict) -> str:
+    """Generate funny interpretation of note distribution"""
+    most_common = max(counts, key=counts.get)
+    least_common = min(counts, key=counts.get)
+    
+    if counts[most_common] / sum(counts.values()) > 0.5:
+        return choice([
+            f"Clearly obsessed with {most_common}",
+            f"{most_common} is your comfort zone",
+            f"Someone really likes {most_common}"
+        ])
+    else:
+        return choice([
+            "Your vocal range is... interesting",
+            "This note distribution would make Bach cry",
+            "You're keeping all notes equally disappointed"
+        ])

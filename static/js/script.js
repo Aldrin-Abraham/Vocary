@@ -6,10 +6,13 @@ class VocaryAnalyzer {
     this.audioContext = null;
     this.analyser = null;
     this.recordingInterval = null;
+    this.visualizerCanvas = null;
+    this.visualizerCtx = null;
     
     this.initElements();
     this.initEventListeners();
     this.initAudioContext();
+    this.initSpaceBackground();
   }
 
   initElements() {
@@ -63,6 +66,43 @@ class VocaryAnalyzer {
     } catch (e) {
       console.error('Web Audio API not supported', e);
       this.showError('Your browser doesn\'t support audio recording. Try Chrome or Firefox.');
+    }
+  }
+
+  initSpaceBackground() {
+    const constellation = document.querySelector('.constellation');
+    if (!constellation) return;
+
+    // Create stars
+    for (let i = 0; i < 200; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      
+      // Random size (1-3px)
+      const size = Math.floor(Math.random() * 3) + 1;
+      star.style.setProperty('--star-size', `${size}px`);
+      
+      // Random position
+      star.style.top = `${Math.random() * 100}%`;
+      star.style.left = `${Math.random() * 100}%`;
+      
+      // Random twinkle properties
+      star.style.setProperty('--twinkle-duration', `${3 + Math.random() * 4}s`);
+      star.style.setProperty('--twinkle-opacity', `${0.3 + Math.random() * 0.5}`);
+      
+      // Add some stars with different colors
+      if (Math.random() > 0.9) {
+        star.style.backgroundColor = `hsl(${Math.random() * 60 + 200}, 100%, 80%)`;
+      }
+      
+      constellation.appendChild(star);
+    }
+
+    // Create meteors
+    for (let i = 1; i <= 3; i++) {
+      const meteor = document.createElement('div');
+      meteor.className = `meteor m${i} style${i}`;
+      constellation.appendChild(meteor);
     }
   }
 
@@ -222,6 +262,9 @@ class VocaryAnalyzer {
       formData.append('song', this.songInput.files[0]);
       formData.append('user', this.userBlob, 'recording.wav');
       
+      // Add cosmic loading effect
+      this.createLoadingStars();
+      
       const response = await fetch('/api/analyze/similarity', {
         method: 'POST',
         body: formData
@@ -239,7 +282,24 @@ class VocaryAnalyzer {
       this.showError(error.message || 'Analysis failed. Try again.');
     } finally {
       this.setLoadingState(false);
+      this.removeLoadingStars();
     }
+  }
+
+  createLoadingStars() {
+    const container = document.querySelector('.analyzer-container');
+    for (let i = 0; i < 10; i++) {
+      const star = document.createElement('div');
+      star.className = 'loading-star';
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.top = `${Math.random() * 100}%`;
+      star.style.animationDelay = `${i * 0.2}s`;
+      container.appendChild(star);
+    }
+  }
+
+  removeLoadingStars() {
+    document.querySelectorAll('.loading-star').forEach(star => star.remove());
   }
 
   displayResults(result) {
@@ -256,9 +316,10 @@ class VocaryAnalyzer {
           <div class="score-label">Delusion Level</div>
         </div>
         
-        <div class="main-result">
+        <div class="main-result ${feedbackClass}">
           <div class="result-icon">
-            <i class="fas fa-${feedbackClass === 'excellent' ? 'grin-stars' : feedbackClass === 'low' ? 'sad-tear' : 'meh'}"></i>
+            <i class="fas fa-${feedbackClass === 'excellent' ? 'grin-stars' : 
+                              feedbackClass === 'low' ? 'sad-tear' : 'meh'}"></i>
           </div>
           <h2>${result.title || 'Results Are In!'}</h2>
           <p>${result.feedback || 'See details below'}</p>
@@ -301,22 +362,129 @@ class VocaryAnalyzer {
     
     // Initialize visualizations
     this.initResultVisualizations(result);
+    this.setupShareButtons();
   }
 
   initResultVisualizations(result) {
-    // This would be replaced with actual Chart.js or similar implementations
+    // Pitch visualization
     const pitchViz = document.getElementById('pitchViz');
-    const timbreViz = document.getElementById('timbreViz');
-    
     if (pitchViz) {
       pitchViz.innerHTML = '<canvas id="pitchChart"></canvas>';
-      // Initialize pitch chart here
+      const ctx = pitchViz.querySelector('canvas').getContext('2d');
+      
+      // Mock data - in a real app this would come from the API
+      const pitchData = Array.from({length: 100}, (_, i) => 
+        Math.sin(i / 10) * 20 + 100 + Math.random() * 20
+      );
+      
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: Array.from({length: 100}, (_, i) => i),
+          datasets: [{
+            label: 'Pitch Deviation',
+            data: pitchData,
+            borderColor: '#9d4edd',
+            backgroundColor: 'rgba(157, 78, 221, 0.1)',
+            borderWidth: 2,
+            tension: 0.1,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => `Pitch: ${ctx.raw.toFixed(1)} Hz`
+              }
+            }
+          },
+          scales: {
+            y: {
+              title: { text: 'Frequency (Hz)', display: true }
+            },
+            x: {
+              title: { text: 'Time (samples)', display: true }
+            }
+          }
+        }
+      });
     }
     
+    // Timbre visualization
+    const timbreViz = document.getElementById('timbreViz');
     if (timbreViz) {
       timbreViz.innerHTML = '<canvas id="timbreChart"></canvas>';
-      // Initialize timbre chart here
+      const ctx = timbreViz.querySelector('canvas').getContext('2d');
+      
+      // Mock data - in a real app this would come from the API
+      new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['Brightness', 'Warmth', 'Richness', 'Breathiness', 'Roughness'],
+          datasets: [{
+            label: 'Your Voice',
+            data: [
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100
+            ],
+            backgroundColor: 'rgba(157, 78, 221, 0.2)',
+            borderColor: '#9d4edd',
+            borderWidth: 2,
+            pointBackgroundColor: '#9d4edd'
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            r: {
+              angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+              grid: { color: 'rgba(255, 255, 255, 0.1)' },
+              pointLabels: { color: '#e2c2ff' },
+              ticks: {
+                backdropColor: 'rgba(0, 0, 0, 0)',
+                color: '#e2c2ff',
+                showLabelBackdrop: false,
+                min: 0,
+                max: 100
+              }
+            }
+          },
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
     }
+  }
+
+  setupShareButtons() {
+    // Twitter share
+    document.querySelector('.share-button.twitter')?.addEventListener('click', () => {
+      const text = `My vocal delusion score is ${document.querySelector('.score-value')?.textContent || '0%'}! Check out Vocary for brutally honest voice analysis.`;
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
+    });
+    
+    // Instagram (would need more complex handling)
+    document.querySelector('.share-button.instagram')?.addEventListener('click', () => {
+      this.showError('Instagram sharing coming soon! Screenshot and share manually for now.');
+    });
+    
+    // Copy link
+    document.querySelector('.share-button.copy-link')?.addEventListener('click', () => {
+      navigator.clipboard.writeText(window.location.href);
+      const btn = document.querySelector('.share-button.copy-link');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+      }, 2000);
+    });
   }
 
   showError(message) {

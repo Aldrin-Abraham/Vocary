@@ -13,18 +13,13 @@ class PitchAnalyzer {
   }
 
   initElements() {
-    // Recording elements
     this.recordBtn = document.getElementById('pitchRecordBtn');
     this.audioElement = document.getElementById('pitchAudio');
     this.visualizer = document.getElementById('pitchVisualizer');
     this.analyzeBtn = document.getElementById('pitchAnalyzeBtn');
-    
-    // Results elements
     this.resultsSection = document.getElementById('pitchResults');
     this.pitchGraph = document.getElementById('pitchGraph');
     this.pitchFeedback = document.getElementById('pitchFeedback');
-    
-    // File upload
     this.uploadArea = document.getElementById('pitchUpload');
     this.fileInput = document.getElementById('pitchInput');
   }
@@ -34,7 +29,6 @@ class PitchAnalyzer {
     this.analyzeBtn.addEventListener('click', () => this.analyzePitch());
     this.fileInput.addEventListener('change', () => this.handleFileUpload());
     
-    // Drag and drop
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
       this.uploadArea.addEventListener(eventName, (e) => {
         e.preventDefault();
@@ -68,7 +62,6 @@ class PitchAnalyzer {
         this.mediaRecorder = new MediaRecorder(stream);
         this.audioChunks = [];
         
-        // Setup audio analysis
         const source = this.audioContext.createMediaStreamSource(stream);
         this.analyser = this.audioContext.createAnalyser();
         source.connect(this.analyser);
@@ -80,7 +73,6 @@ class PitchAnalyzer {
           this.audioElement.src = URL.createObjectURL(audioBlob);
           this.audioElement.style.display = 'block';
           
-          // Clean up
           stream.getTracks().forEach(track => track.stop());
           if (this.recordingInterval) {
             clearInterval(this.recordingInterval);
@@ -160,19 +152,16 @@ class PitchAnalyzer {
     this.setLoadingState(true);
     
     try {
-      // In a real app, this would call your backend API
       const mockResult = this.generateMockPitchAnalysis();
       this.displayResults(mockResult);
     } catch (error) {
       this.showError("Analysis failed. Try again.");
-      console.error(error);
     } finally {
       this.setLoadingState(false);
     }
   }
 
   generateMockPitchAnalysis() {
-    // This would be replaced with actual analysis from your backend
     const pitchData = [];
     for (let i = 0; i < 100; i++) {
       pitchData.push(Math.sin(i / 5) * 10 + Math.random() * 5 + 60);
@@ -209,7 +198,7 @@ class PitchAnalyzer {
   }
 
   displayResults(result) {
-    this.resultsSection.innerHTML = `
+    this.resultsSection.innerHTML = 
       <div class="results-content">
         <h2>Pitch Analysis Results</h2>
         <div class="score-display">
@@ -237,7 +226,7 @@ class PitchAnalyzer {
           <p>Detected vibrato rate: ${result.vibrato} Hz</p>
         </div>
       </div>
-    `;
+    ;
     
     this.initPitchChart(result.pitchData);
     this.initNoteChart(result.noteDistribution);
@@ -317,13 +306,13 @@ class PitchAnalyzer {
   }
 
   showError(message) {
-    this.resultsSection.innerHTML = `
+    this.resultsSection.innerHTML = 
       <div class="error-message">
         <i class="fas fa-exclamation-triangle"></i>
         <h3>Oops!</h3>
         <p>${message}</p>
       </div>
-    `;
+    ;
   }
 
   setLoadingState(isLoading) {
@@ -333,8 +322,3 @@ class PitchAnalyzer {
       : '<i class="fas fa-gavel"></i> Judge My Pitch';
   }
 }
-
-// Initialize
-document.addEventListener('DOMContentLoaded', () => {
-  new PitchAnalyzer();
-});

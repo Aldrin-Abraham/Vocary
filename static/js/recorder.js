@@ -16,7 +16,6 @@ class AudioRecorder {
       this.mediaRecorder = new MediaRecorder(stream);
       this.audioChunks = [];
       
-      // Set up audio analysis
       this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
       const source = this.audioContext.createMediaStreamSource(stream);
       this.analyser = this.audioContext.createAnalyser();
@@ -26,7 +25,6 @@ class AudioRecorder {
       
       this.mediaRecorder.ondataavailable = e => this.audioChunks.push(e.data);
       
-      this.mediaRecorder.start();
       return new Promise((resolve) => {
         this.mediaRecorder.onstop = () => {
           const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
@@ -86,7 +84,6 @@ class AudioRecorder {
       
       ctx.fillStyle = gradient;
       ctx.fillRect(x, height - barHeight, barWidth, barHeight);
-      
       x += barWidth + 1;
     }
     

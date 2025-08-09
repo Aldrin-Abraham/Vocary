@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocary - Celebrity Delusion Meter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #9d4edd;
+            --secondary-color: #5a189a;
+            --accent-color: #e0aaff;
+            --dark-color: #10002b;
+            --light-color: #f8f9fa;
+            --text-color: #e2c2ff;
+            --text-light: #c77dff;
+            --font-main: 'Space Grotesk', sans-serif;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            color: var(--text-color);
+            background-color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        /* Space Background */
+        .constellation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        .gradient-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(16, 0, 43, 0.9) 0%, rgba(93, 24, 154, 0.7) 100%);
+            z-index: -1;
+        }
+
+        /* Navigation */
+        .analyzer-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 40px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(16, 0, 43, 0.5);
+            border-bottom: 1px solid rgba(157, 78, 221, 0.2);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 600;
+            font-size: 1.5rem;
+            gap: 10px;
+        }
+
+        .logo {
+            width: 40px;
+            height: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .analyzer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 120px 40px 60px;
+        }
+
+        .analyzer-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .gradient-text {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color), var(--primary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientFlow 8s linear infinite;
+            background-size: 200% 100%;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .upload-card {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(16, 0, 43, 0.5);
+            border: 1px solid rgba(157, 78, 221, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            transition: var(--transition);
+        }
+
+        .upload-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .upload-header i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .upload-area {
+            border: 2px dashed var(--primary-color);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-area input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-prompt {
+            pointer-events: none;
+        }
+
+        .upload-prompt i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .file-info {
+            display: none;
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(157, 78, 221, 0.1);
+            border-radius: 5px;
+        }
+
+        /* Recording Button */
+        .record-button {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 20px;
+        }
+
+        .record-button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        .record-button.recording {
+            background: #ff4d4d;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0; }
+            70% { transform: scale(1.1); opacity: 0.4; }
+            100% { transform: scale(1.2); opacity: 0; }
+        }
+
+        /* Visualizer */
+        .visualizer {
+            width: 100%;
+            height: 100px;
+            background: rgba(16, 0, 43, 0.3);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Divider */
+        .or-divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .or-divider::before, .or-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+        }
+
+        .or-divider::before {
+            left: 0;
+        }
+
+        .or-divider::after {
+            right: 0;
+        }
+
+        /* Analyze Button */
+        .analyze-button {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 0 20px rgba(157, 78, 221, 0.5);
+        }
+
+        .analyze-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(157, 78, 221, 0.8);
+        }
+
+        .analyze-button:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .analyze-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .disclaimer {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 15px;
+            opacity: 0.7;
+        }
+
+        /* Results Section */
+        .results-section {
+            background: rgba(16, 0, 43, 0.5);
+            border: 1px solid rgba(157, 78, 221, 0.2);
+            border-radius: 15px;
+            padding: 40px;
+            margin-top: 40px;
+        }
+
+        .results-placeholder {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .results-placeholder i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        /* Footer */
+        .analyzer-footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .analyzer-container {
+                padding: 100px 20px 40px;
+            }
+            
+            .upload-section {
+                flex-direction: column;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .analyzer-container {
+                padding: 90px 15px 30px;
+            }
+            
+            .nav-container {
+                padding: 0 15px;
+            }
+            
+            .logo {
+                width: 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Space Background -->
+    <div class="constellation" id="constellation">
+        <div class="meteor m1"></div>
+        <div class="meteor m2"></div>
+    </div>
+    <div class="gradient-overlay"></div>
+
+    <!-- Navigation -->
+    <nav class="analyzer-nav">
+        <div class="nav-container">
+            <a href="index.html" class="logo-link">
+                <img src="logo.png" alt="Vocary Logo" class="logo">
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="pitch-police.html" class="nav-link"><i class="fas fa-wave-square"></i> Pitch</a>
+                <a href="timbre-tattletale.html" class="nav-link"><i class="fas fa-sliders-h"></i> Timbre</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="analyzer-container">
+        <header class="analyzer-header">
+            <h1 class="gradient-text">Celebrity Delusion Meter™</h1>
+            <p class="subtitle">Find out which famous singer you <i>definitely</i> don't sound like</p>
+        </header>
+
+        <div class="analyzer-content">
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <div class="upload-card">
+                    <div class="upload-header">
+                        <i class="fas fa-meteor"></i>
+                        <h3>Original Artist</h3>
+                    </div>
+                    <p>Upload the song you're butchering</p>
+                    <div class="upload-area" id="songUpload">
+                        <input type="file" id="songInput" accept="audio/*">
+                        <div class="upload-prompt">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Drag & drop or click to browse</p>
+                            <small>MP3, WAV, OGG</small>
+                        </div>
+                        <div class="file-info" id="songFileInfo"></div>
+                    </div>
+                </div>
+
+                <div class="upload-card">
+                    <div class="upload-header">
+                        <i class="fas fa-user-astronaut"></i>
+                        <h3>Your "Performance"</h3>
+                    </div>
+                    <p>Record or upload your vocal disaster</p>
+                    <button id="recordBtn" class="record-button">
+                        <i class="fas fa-microphone"></i> Start Recording
+                    </button>
+                    <div class="visualizer" id="visualizer"></div>
+                    <audio id="userAudio" controls style="display:none;"></audio>
+                    <div class="or-divider">OR</div>
+                    <div class="upload-area" id="userUpload">
+                        <input type="file" id="userInput" accept="audio/*">
+                        <div class="upload-prompt">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Drag & drop or click to browse</p>
+                            <small>MP3, WAV, OGG</small>
+                        </div>
+                        <div class="file-info" id="userFileInfo"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analyze Button -->
+            <div class="analyze-section">
+                <button id="analyzeBtn" class="analyze-button" disabled>
+                    <i class="fas fa-rocket"></i> Launch Analysis
+                </button>
+                <p class="disclaimer">By proceeding, you consent to potential emotional damage</p>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection">
+                <div class="results-placeholder">
+                    <i class="fas fa-star"></i>
+                    <h3>Your Analysis Awaits</h3>
+                    <p>Upload files and prepare for disappointment</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="analyzer-footer">
+        <p>Vocary - Because ignorance was bliss</p>
+    </footer>
+
+    <script>
+        class AudioRecorder {
+            constructor(recordBtnId, visualizerId, audioElementId) {
+                this.recordBtn = document.getElementById(recordBtnId);
+                this.visualizer = document.getElementById(visualizerId);
+                this.audioElement = document.getElementById(audioElementId);
+                this.mediaRecorder = null;
+                this.audioChunks = [];
+                this.isRecording = false;
+                this.audioContext = null;
+                this.analyser = null;
+                this.dataArray = null;
+                this.canvasContext = null;
+                this.animationId = null;
+                
+                this.init();
+            }
+            
+            init() {
+                if (!this.recordBtn || !this.visualizer) return;
+                
+                // Set up canvas for visualizer
+                const canvas = document.createElement('canvas');
+                canvas.width = this.visualizer.offsetWidth;
+                canvas.height = this.visualizer.offsetHeight;
+                this.visualizer.appendChild(canvas);
+                this.canvasContext = canvas.getContext('2d');
+                
+                // Add event listener to record button
+                this.recordBtn.addEventListener('click', () => {
+                    if (this.isRecording) {
+                        this.stopRecording();
+                    } else {
+                        this.startRecording();
+                    }
+                });
+            }
+            
+            async startRecording() {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    this.mediaRecorder = new MediaRecorder(stream);
+                    this.audioChunks = [];
+                    
+                    // Set up audio context for visualization
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const source = this.audioContext.createMediaStreamSource(stream);
+                    this.analyser = this.audioContext.createAnalyser();
+                    this.analyser.fftSize = 256;
+                    source.connect(this.analyser);
+                    
+                    const bufferLength = this.analyser.frequencyBinCount;
+                    this.dataArray = new Uint8Array(bufferLength);
+                    
+                    // Start visualization
+                    this.drawVisualizer();
+                    
+                    // Set up media recorder
+                    this.mediaRecorder.ondataavailable = event => {
+                        this.audioChunks.push(event.data);
+                    };
+                    
+                    this.mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        
+                        if (this.audioElement) {
+                            this.audioElement.src = audioUrl;
+                            this.audioElement.style.display = 'block';
+                        }
+                        
+                        // Stop visualization
+                        cancelAnimationFrame(this.animationId);
+                        
+                        // Clean up
+                        stream.getTracks().forEach(track => track.stop());
+                    };
+                    
+                    this.mediaRecorder.start();
+                    this.isRecording = true;
+                    this.recordBtn.innerHTML = '<i class="fas fa-stop"></i> Stop Recording';
+                    this.recordBtn.classList.add('recording');
+                    
+                } catch (error) {
+                    console.error('Error accessing microphone:', error);
+                    alert('Could not access microphone. Please ensure you have granted microphone permissions.');
+                }
+            }
+            
+            stopRecording() {
+                if (this.mediaRecorder && this.isRecording) {
+                    this.mediaRecorder.stop();
+                    this.isRecording = false;
+                    this.recordBtn.innerHTML = '<i class="fas fa-microphone"></i> Start Recording';
+                    this.recordBtn.classList.remove('recording');
+                }
+            }
+            
+            drawVisualizer() {
+                if (!this.analyser || !this.canvasContext) return;
+                
+                this.analyser.getByteFrequencyData(this.dataArray);
+                
+                const width = this.visualizer.offsetWidth;
+                const height = this.visualizer.offsetHeight;
+                const barWidth = (width / this.analyser.frequencyBinCount) * 2.5;
+                let x = 0;
+                
+                this.canvasContext.clearRect(0, 0, width, height);
+                
+                for (let i = 0; i < this.analyser.frequencyBinCount; i++) {
+                    const barHeight = (this.dataArray[i] / 255) * height;
+                    
+                    this.canvasContext.fillStyle = `hsl(${i * 2}, 100%, 50%)`;
+                    this.canvasContext.fillRect(x, height - barHeight, barWidth, barHeight);
+                    
+                    x += barWidth + 1;
+                }
+                
+                this.animationId = requestAnimationFrame(() => this.drawVisualizer());
+            }
+        }
+
+        class FileUploadHandler {
+            constructor(uploadAreaId, fileInputId, fileInfoId) {
+                this.uploadArea = document.getElementById(uploadAreaId);
+                this.fileInput = document.getElementById(fileInputId);
+                this.fileInfo = document.getElementById(fileInfoId);
+                
+                if (this.uploadArea && this.fileInput) {
+                    this.init();
+                }
+            }
+            
+            init() {
+                // Handle drag and drop
+                this.uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    this.uploadArea.style.borderColor = 'var(--accent-color)';
+                });
+                
+                this.uploadArea.addEventListener('dragleave', () => {
+                    this.uploadArea.style.borderColor = 'var(--primary-color)';
+                });
+                
+                this.uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    this.uploadArea.style.borderColor = 'var(--primary-color)';
+                    
+                    if (e.dataTransfer.files.length) {
+                        this.fileInput.files = e.dataTransfer.files;
+                        this.handleFileSelection();
+                    }
+                });
+                
+                // Handle file input change
+                this.fileInput.addEventListener('change', () => {
+                    this.handleFileSelection();
+                });
+            }
+            
+            handleFileSelection() {
+                if (this.fileInput.files.length) {
+                    const file = this.fileInput.files[0];
+                    
+                    if (this.fileInfo) {
+                        this.fileInfo.innerHTML = `
+                            <p><strong>${file.name}</strong></p>
+                            <p>${(file.size / 1024).toFixed(2)} KB</p>
+                        `;
+                        this.fileInfo.style.display = 'block';
+                    }
+                    
+                    // Hide upload prompt
+                    const uploadPrompt = this.uploadArea.querySelector('.upload-prompt');
+                    if (uploadPrompt) {
+                        uploadPrompt.style.display = 'none';
+                    }
+                    
+                    // Enable analyze button if both files are uploaded
+                    checkFilesReady();
+                }
+            }
+        }
+
+        function checkFilesReady() {
+            const songFile = document.getElementById('songInput').files.length > 0;
+            const userFile = document.getElementById('userInput').files.length > 0 || 
+                            document.getElementById('userAudio').src;
+            
+            document.getElementById('analyzeBtn').disabled = !(songFile && userFile);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize audio recorder
+            const recorder = new AudioRecorder('recordBtn', 'visualizer', 'userAudio');
+            
+            // Initialize file upload handlers
+            new FileUploadHandler('songUpload', 'songInput', 'songFileInfo');
+            new FileUploadHandler('userUpload', 'userInput', 'userFileInfo');
+            
+            // Analyze button handler
+            document.getElementById('analyzeBtn').addEventListener('click', () => {
+                const analyzeBtn = document.getElementById('analyzeBtn');
+                analyzeBtn.disabled = true;
+                analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+                
+                // Simulate analysis (replace with actual API call)
+                setTimeout(() => {
+                    // Redirect to results page with sample data
+                    window.location.href = 'results.html?type=celebrity&score=42';
+                }, 2000);
+            });
+            
+            // Check when audio recording is complete
+            document.getElementById('userAudio').addEventListener('loadeddata', checkFilesReady);
+        });
+    </script>
+</body>
+</html>

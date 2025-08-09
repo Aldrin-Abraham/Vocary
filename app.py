@@ -14,19 +14,19 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 @app.route('/')
 def home():
-    return render_template('welcome.html')
+    return render_template('index.html')
 
 @app.route('/analyzer')
 def analyzer():
-    return render_template('index.html')
+    return render_template('celebrity-delusion.html')
 
 @app.route('/pitch')
 def pitch():
-    return render_template('pitch.html')
+    return render_template('pitch-police.html')
 
 @app.route('/timbre')
 def timbre():
-    return render_template('timbre.html')
+    return render_template('timbre-tattletale.html')
 
 @app.route('/results')
 def results():

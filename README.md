@@ -74,15 +74,8 @@ python app.py
 ~~~
 
 # Project Documentation
-## Screenshots (Add at least 3)
-![Screenshot1](Add screenshot 1 here with proper name)
-*Add caption explaining what this shows*
-
-![Screenshot2](Add screenshot 2 here with proper name)
-*Add caption explaining what this shows*
-
-![Screenshot3](Add screenshot 3 here with proper name)
-*Add caption explaining what this shows*
+## Screenshots
+<img width="1919" height="1079" alt="Vocary" src="https://github.com/user-attachments/assets/8751c7eb-bf78-4133-b4f2-b867e42708c3" />
 
 ## Diagrams
 <img width="4425" height="3539" alt="Data Flow" src="https://github.com/user-attachments/assets/0878fce9-4b99-4c00-b30e-0c38ed030d2e" />

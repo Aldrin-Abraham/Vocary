@@ -6,765 +6,7 @@
     <title>Vocary - Vocal Vanity Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #9d4edd;
-            --secondary-color: #5a189a;
-            --accent-color: #e0aaff;
-            --dark-color: #10002b;
-            --light-color: #f8f9fa;
-            --text-color: #e2c2ff;
-            --text-light: #c77dff;
-            --font-main: 'Space Grotesk', sans-serif;
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            --shadow-sm: 0 1px 3px rgba(157, 78, 221, 0.12), 0 1px 2px rgba(157, 78, 221, 0.24);
-            --shadow-md: 0 4px 6px rgba(157, 78, 221, 0.1), 0 1px 3px rgba(157, 78, 221, 0.08);
-            --shadow-lg: 0 10px 20px rgba(157, 78, 221, 0.1), 0 6px 6px rgba(157, 78, 221, 0.1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(16, 0, 43, 0.8);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 5px;
-            border: 2px solid rgba(16, 0, 43, 0.8);
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--accent-color);
-        }
-
-        body {
-            font-family: var(--font-main);
-            color: var(--text-color);
-            line-height: 1.6;
-            background-color: var(--dark-color);
-            overflow-x: hidden;
-        }
-
-        /* Space Background Animation */
-        .constellation {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-        }
-        
-        .estrela {
-            background-color: white;
-            border-radius: 50%;
-            position: absolute;
-        }
-        
-        .estrela.tam1 { width: 1px; height: 1px; }
-        .estrela.tam2 { width: 2px; height: 2px; }
-        .estrela.tam3 { width: 3px; height: 3px; }
-
-        .meteoro {
-            position: absolute;
-            background-color: #fff;
-            width: 2px;
-            height: 2px;
-            border-radius: 50%;
-            transform: rotate(-35deg);
-            animation-timing-function: linear;
-            animation-iteration-count: infinite;
-            animation-duration: 1s;
-        }
-
-        .meteoro:before {
-            content: "";
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 10px;
-            width: 0;
-            height: 0;
-            border-top: 1px solid transparent;
-            border-bottom: 1px solid transparent;
-            border-left: 85px solid white;
-            position: absolute;
-            left: 2px;
-            top: 0;
-        }
-
-        .meteoro.style1 { animation-name: meteoroStyle1; }
-        .meteoro.style2 { animation-name: meteoroStyle2; }
-        .meteoro.style3 { animation-name: meteoroStyle3; }
-        .meteoro.style4 { animation-name: meteoroStyle4; }
-
-        @keyframes meteoroStyle1 {
-            0% { opacity: 0; right: 300px; top: 100px; }
-            30% { opacity: .3; }
-            60% { opacity: .3; }
-            100% { opacity: 0; right: 1000px; top: 600px; }
-        }
-
-        @keyframes meteoroStyle2 {
-            0% { opacity: 0; right: 700px; top: 100px; }
-            30% { opacity: 1; }
-            60% { opacity: 1; }
-            100% { opacity: 0; right: 1400px; top: 600px; }
-        }
-
-        @keyframes meteoroStyle3 {
-            0% { opacity: 0; right: 300px; top: 300px; }
-            30% { opacity: 1; }
-            60% { opacity: 1; }
-            100% { opacity: 0; right: 1000px; top: 800px; }
-        }
-
-        @keyframes meteoroStyle4 {
-            0% { opacity: 0; right: 700px; top: 300px; }
-            30% { opacity: 1; }
-            60% { opacity: 1; }
-            100% { opacity: 0; right: 1400px; top: 800px; }
-        }
-
-        /* Gradient Overlay */
-        .gradient-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(16, 0, 43, 0.8) 0%, rgba(90, 24, 154, 0.6) 100%);
-            z-index: -1;
-        }
-
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Navigation */
-        .space-nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 20px 40px;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            background: rgba(16, 0, 43, 0.5);
-            border-bottom: 1px solid rgba(157, 78, 221, 0.2);
-            transition: var(--transition);
-        }
-
-        .space-nav.scrolled {
-            background: rgba(16, 0, 43, 0.9);
-            box-shadow: var(--shadow-md);
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .logo-link {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: var(--text-color);
-            font-weight: 600;
-            font-size: 1.5rem;
-            gap: 10px;
-        }
-
-        .logo {
-            width: 40px;
-            height: auto;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
-
-        .nav-links.active {
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background: rgba(16, 0, 43, 0.9);
-            padding: 20px;
-            border-bottom: 1px solid rgba(157, 78, 221, 0.3);
-        }
-
-        .nav-link {
-            color: var(--text-light);
-            text-decoration: none;
-            font-weight: 500;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav-link:hover {
-            color: var(--accent-color);
-            transform: translateY(-2px);
-        }
-
-        .nav-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--text-color);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding: 120px 40px 60px;
-            position: relative;
-        }
-
-        .hero-content {
-            max-width: 600px;
-            margin-right: 40px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-
-        .hero-content.animate-in {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .gradient-text {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 20px;
-            background: linear-gradient(90deg, var(--primary-color), var(--accent-color), var(--primary-color));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: gradientFlow 8s linear infinite;
-            background-size: 200% 100%;
-        }
-
-        @keyframes gradientFlow {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 200% 50%; }
-        }
-
-        .highlight {
-            color: var(--accent-color);
-        }
-
-        .subtitle {
-            font-size: 1.25rem;
-            color: var(--text-light);
-            margin-bottom: 40px;
-            max-width: 500px;
-        }
-
-        .hero-cta {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 60px;
-        }
-
-        .cta-button {
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-primary {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            box-shadow: 0 0 20px rgba(157, 78, 221, 0.5);
-        }
-
-        .cta-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 0 30px rgba(157, 78, 221, 0.8);
-        }
-
-        .cta-secondary {
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-        }
-
-        .cta-secondary:hover {
-            background: var(--primary-color);
-            color: white;
-            transform: translateY(-3px);
-        }
-
-        .cta-pulse {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50px;
-            animation: pulse 2s infinite;
-            opacity: 0;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 0; }
-            70% { transform: scale(1.1); opacity: 0.4; }
-            100% { transform: scale(1.2); opacity: 0; }
-        }
-
-        .hero-scroll {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: var(--text-light);
-            cursor: pointer;
-        }
-
-        .scroll-line {
-            width: 2px;
-            height: 40px;
-            background: linear-gradient(to bottom, var(--primary-color), transparent);
-            margin-top: 10px;
-            animation: scrollBounce 2s infinite;
-        }
-
-        @keyframes scrollBounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(10px); }
-        }
-
-        .hero-visual {
-            flex: 1;
-            max-width: 600px;
-            height: 300px;
-            position: relative;
-        }
-
-        .voice-wave {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, 
-                rgba(157, 78, 221, 0.1) 0%, 
-                rgba(157, 78, 221, 0.3) 50%, 
-                rgba(157, 78, 221, 0.1) 100%);
-            border-radius: 10px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Features Section */
-        .features {
-            padding: 100px 40px;
-            position: relative;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .section-header h2 {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            position: relative;
-            display: inline-block;
-        }
-
-        .section-header h2::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
-            border-radius: 2px;
-        }
-
-        .section-header p {
-            font-size: 1.1rem;
-            color: var(--text-light);
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .feature-card {
-            background: rgba(16, 0, 43, 0.5);
-            border: 1px solid rgba(157, 78, 221, 0.2);
-            border-radius: 15px;
-            padding: 30px;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(157, 78, 221, 0.1) 0%, rgba(157, 78, 221, 0.3) 100%);
-            z-index: -1;
-            opacity: 0;
-            transition: var(--transition);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .feature-card:hover::before {
-            opacity: 1;
-        }
-
-        .feature-icon {
-            font-size: 2rem;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-            transition: var(--transition);
-        }
-
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-        }
-
-        .feature-card p {
-            color: var(--text-light);
-            margin-bottom: 20px;
-        }
-
-        .feature-tag {
-            display: inline-block;
-            padding: 5px 15px;
-            background: rgba(157, 78, 221, 0.2);
-            border: 1px solid var(--primary-color);
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--accent-color);
-        }
-
-        /* Demo Section */
-        .demo {
-            padding: 100px 40px;
-            background: rgba(16, 0, 43, 0.3);
-        }
-
-        .demo-steps {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 30px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .step {
-            flex: 1;
-            min-width: 250px;
-            display: flex;
-            gap: 20px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-
-        .step.animate-in {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .step-number {
-            width: 50px;
-            height: 50px;
-            background: var(--primary-color);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-
-        .step-content h3 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-        }
-
-        .step-content p {
-            color: var(--text-light);
-        }
-
-        .step-arrow {
-            color: var(--primary-color);
-            font-size: 1.5rem;
-        }
-
-        /* Final CTA */
-        .final-cta {
-            padding: 100px 40px;
-            text-align: center;
-        }
-
-        .cta-card {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 60px;
-            background: rgba(16, 0, 43, 0.5);
-            border: 1px solid rgba(157, 78, 221, 0.2);
-            border-radius: 15px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-            box-shadow: var(--shadow-md);
-        }
-
-        .cta-card.animate-in {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .cta-card h2 {
-            font-size: 2.2rem;
-            margin-bottom: 20px;
-        }
-
-        .cta-card p {
-            font-size: 1.1rem;
-            color: var(--text-light);
-            margin-bottom: 30px;
-        }
-
-        .cta-large {
-            padding: 20px 40px;
-            font-size: 1.2rem;
-        }
-
-        /* Footer */
-        .space-footer {
-            background: rgba(16, 0, 43, 0.8);
-            padding: 60px 40px 30px;
-            border-top: 1px solid rgba(157, 78, 221, 0.2);
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 60px;
-            margin-bottom: 40px;
-        }
-
-        .footer-brand {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .footer-logo {
-            width: 60px;
-            height: auto;
-            margin-bottom: 20px;
-        }
-
-        .footer-brand p {
-            color: var(--text-light);
-            margin-bottom: 20px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 15px;
-        }
-
-        .social-links a {
-            color: var(--text-color);
-            font-size: 1.2rem;
-            transition: var(--transition);
-        }
-
-        .social-links a:hover {
-            color: var(--accent-color);
-            transform: translateY(-3px);
-        }
-
-        .footer-links {
-            flex: 2;
-            display: flex;
-            gap: 60px;
-            flex-wrap: wrap;
-        }
-
-        .link-group {
-            min-width: 150px;
-        }
-
-        .link-group h4 {
-            font-size: 1.1rem;
-            margin-bottom: 20px;
-            color: var(--accent-color);
-        }
-
-        .link-group a {
-            display: block;
-            color: var(--text-light);
-            text-decoration: none;
-            margin-bottom: 10px;
-            transition: var(--transition);
-        }
-
-        .link-group a:hover {
-            color: var(--accent-color);
-            transform: translateX(5px);
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 30px;
-            border-top: 1px solid rgba(157, 78, 221, 0.2);
-            color: var(--text-light);
-        }
-
-        /* Scroll Reveal Animations */
-        [data-animate] {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-
-        [data-animate].animate {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 992px) {
-            .hero {
-                flex-direction: column;
-                text-align: center;
-                padding-top: 150px;
-            }
-            
-            .hero-content {
-                margin-right: 0;
-                margin-bottom: 60px;
-                align-items: center;
-            }
-            
-            .subtitle {
-                margin-left: auto;
-                margin-right: auto;
-            }
-            
-            .hero-cta {
-                justify-content: center;
-            }
-            
-            .hero-visual {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .nav-links.active {
-                display: flex;
-            }
-            
-            .nav-toggle {
-                display: block;
-            }
-            
-            .hero-cta {
-                flex-direction: column;
-            }
-            
-            .demo-steps {
-                flex-direction: column;
-            }
-            
-            .step-arrow {
-                transform: rotate(90deg);
-                padding: 20px 0;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .hero {
-                padding: 120px 20px 60px;
-            }
-            
-            .features, .demo, .final-cta {
-                padding: 80px 20px;
-            }
-            
-            .cta-card {
-                padding: 40px 20px;
-            }
-            
-            .footer-content {
-                flex-direction: column;
-                gap: 40px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <!-- Space Background Elements -->
@@ -781,7 +23,7 @@
             <div class="nav-links">
                 <a href="celebrity-delusion.html" class="nav-link"><i class="fas fa-rocket"></i> Launch Analyzer</a>
                 <a href="#features" class="nav-link"><i class="fas fa-star"></i> Features</a>
-                <a href="#demo" class="nav-link"><i class="fas fa-video"></i> Demo</a>
+                <a href="#how-it-works" class="nav-link"><i class="fas fa-question-circle"></i> How It Works</a>
             </div>
             <button class="nav-toggle"><i class="fas fa-bars"></i></button>
         </div>
@@ -790,15 +32,15 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content" data-animate>
-            <h1 class="gradient-text">Embrace Your <span class="highlight">Vocal Delusions</span></h1>
-            <p class="subtitle">The only platform that tells you what you want to hear (then ruthlessly corrects it)</p>
+            <h1 class="gradient-text">Embrace Your <span class="highlight">Vocal Reality</span></h1>
+            <p class="subtitle">The only platform that tells you what you need to hear (with colorful charts to soften the blow)</p>
             <div class="hero-cta">
                 <a href="celebrity-delusion.html" class="cta-button cta-primary">
-                    <i class="fas fa-microphone-alt"></i> Get Roasted
+                    <i class="fas fa-microphone-alt"></i> Begin Analysis
                     <span class="cta-pulse"></span>
                 </a>
                 <a href="#features" class="cta-button cta-secondary">
-                    <i class="fas fa-info-circle"></i> Why Bother?
+                    <i class="fas fa-info-circle"></i> Explore Features
                 </a>
             </div>
             <div class="hero-scroll" onclick="document.querySelector('#features').scrollIntoView({ behavior: 'smooth' })">
@@ -814,84 +56,177 @@
     <!-- Features Section -->
     <section id="features" class="features">
         <div class="section-header">
-            <h2>Our <span class="highlight">Dubious</span> Features</h2>
-            <p>Powered by questionable science and zero shame</p>
+            <h2>Our <span class="highlight">Features</span></h2>
+            <p>Comprehensive vocal analysis with brutal honesty</p>
         </div>
         <div class="feature-grid">
-            <!-- Feature 1 -->
-            <div class="feature-card" onclick="location.href='celebrity-delusion.html'" data-animate>
-                <div class="feature-icon">
-                    <i class="fas fa-user-astronaut"></i>
+            <!-- Row 1 - 3 features centered -->
+            <div class="feature-row">
+                <!-- Feature 1 -->
+                <div class="feature-card" onclick="location.href='celebrity-delusion.html'" data-animate>
+                    <div class="feature-icon">
+                        <i class="fas fa-user-astronaut"></i>
+                    </div>
+                    <h3>Celebrity Delusion Meter™</h3>
+                    <p>Discover which famous singer you <i>definitely</i> don't sound like with our patented disappointment algorithm</p>
+                    <div class="feature-tag">Most Humiliating</div>
                 </div>
-                <h3>Celebrity Delusion Meter™</h3>
-                <p>Discover which famous singer you <i>definitely</i> don't sound like with our patented disappointment algorithm</p>
-                <div class="feature-tag">Most Humiliating</div>
+                
+                <!-- Feature 2 -->
+                <div class="feature-card" onclick="location.href='pitch-police.html'" data-animate>
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Pitch Police</h3>
+                    <p>Visual proof that yes, you were off-key. Includes "yikes" annotations for maximum shame</p>
+                    <div class="feature-tag">Brutal</div>
+                </div>
+                
+                <!-- Feature 3 - New -->
+                <div class="feature-card" onclick="location.href='vocal-autopsy.html'" data-animate>
+                    <div class="feature-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h3>Vocal Autopsy</h3>
+                    <p>Detailed breakdown of everything wrong with your voice, served with colorful charts</p>
+                    <div class="feature-tag">New!</div>
+                </div>
             </div>
             
-            <!-- Feature 2 -->
-            <div class="feature-card" onclick="location.href='pitch-police.html'" data-animate>
-                <div class="feature-icon">
-                    <i class="fas fa-chart-line"></i>
+            <!-- Row 2 - 2 features centered -->
+            <div class="feature-row">
+                <!-- Feature 4 -->
+                <div class="feature-card" onclick="location.href='timbre-tattletale.html'" data-animate>
+                    <div class="feature-icon">
+                        <i class="fas fa-sliders-h"></i>
+                    </div>
+                    <h3>Timbre Tattletale</h3>
+                    <p>Reveals if your voice is "sultry jazz" or "teenager hitting puberty"</p>
+                    <div class="feature-tag">Uncomfortable</div>
                 </div>
-                <h3>Pitch Police</h3>
-                <p>Visual proof that yes, you were off-key. Includes "yikes" annotations for maximum shame</p>
-                <div class="feature-tag">Brutal</div>
-            </div>
-            
-            <!-- Feature 3 -->
-            <div class="feature-card" onclick="location.href='timbre-tattletale.html'" data-animate>
-                <div class="feature-icon">
-                    <i class="fas fa-sliders-h"></i>
+                
+                <!-- Feature 5 -->
+                <div class="feature-card" onclick="location.href='emotion-exposer.html'" data-animate>
+                    <div class="feature-icon">
+                        <i class="fas fa-heart-broken"></i>
+                    </div>
+                    <h3>Emotion Exposer</h3>
+                    <p>Claims you were singing passionately when you were just yelling at your cat</p>
+                    <div class="feature-tag">Beta</div>
                 </div>
-                <h3>Timbre Tattletale</h3>
-                <p>Reveals if your voice is "sultry jazz" or "teenager hitting puberty"</p>
-                <div class="feature-tag">Uncomfortable</div>
-            </div>
-            
-            <!-- Feature 4 -->
-            <div class="feature-card" onclick="location.href='emotion-exposer.html'" data-animate>
-                <div class="feature-icon">
-                    <i class="fas fa-heart-broken"></i>
-                </div>
-                <h3>Emotion Exposer</h3>
-                <p>Claims you were singing passionately when you were just yelling at your cat</p>
-                <div class="feature-tag">Beta</div>
             </div>
         </div>
     </section>
 
-    <!-- Demo Section -->
-    <section id="demo" class="demo">
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works">
         <div class="section-header">
-            <h2>How It <span class="highlight">Hurts</span></h2>
-            <p>Three simple steps to crushed dreams</p>
+            <h2>How It <span class="highlight">Works</span></h2>
+            <p>Three simple steps to vocal enlightenment</p>
         </div>
-        <div class="demo-steps">
-            <div class="step" data-animate>
-                <div class="step-number">1</div>
-                <div class="step-content">
-                    <h3>Record Your Ego</h3>
-                    <p>Sing like no one's listening (because they probably aren't)</p>
+        <div class="steps-container">
+            <div class="step-cards">
+                <!-- Step 1 -->
+                <div class="step-card" data-animate>
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Record Your Voice</h3>
+                        <p>Sing, speak, or scream into your microphone. We'll analyze whatever comes out.</p>
+                        <div class="step-icon">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step Arrow -->
+                <div class="step-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="step-card" data-animate>
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Choose Your Analysis</h3>
+                        <p>Select from our suite of brutally honest vocal assessment tools.</p>
+                        <div class="step-icon">
+                            <i class="fas fa-sliders-h"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step Arrow -->
+                <div class="step-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="step-card" data-animate>
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Receive Your Report</h3>
+                        <p>Get detailed feedback with visualizations that make the truth easier to swallow.</p>
+                        <div class="step-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="step-arrow">
-                <i class="fas fa-arrow-right"></i>
-            </div>
-            <div class="step" data-animate>
-                <div class="step-number">2</div>
-                <div class="step-content">
-                    <h3>Choose Your Torture</h3>
-                    <p>Select from our arsenal of analysis tools</p>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="section-header">
+            <h2>What <span class="highlight">Users</span> Say</h2>
+            <p>Don't take our word for it - here's what our victims say</p>
+        </div>
+        <div class="testimonial-cards">
+            <div class="testimonial-card" data-animate>
+                <div class="testimonial-content">
+                    <i class="fas fa-quote-left"></i>
+                    <p>I thought I sounded like Adele. Vocary showed me I sound more like a goat in distress.</p>
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="author-info">
+                        <h4>Sarah J.</h4>
+                        <p>Delusional Singer</p>
+                    </div>
                 </div>
             </div>
-            <div class="step-arrow">
-                <i class="fas fa-arrow-right"></i>
+            
+            <div class="testimonial-card" data-animate>
+                <div class="testimonial-content">
+                    <i class="fas fa-quote-left"></i>
+                    <p>The pitch analysis made me cry, but at least the charts were pretty.</p>
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="author-info">
+                        <h4>Mike T.</h4>
+                        <p>Shower Singer</p>
+                    </div>
+                </div>
             </div>
-            <div class="step" data-animate>
-                <div class="step-number">3</div>
-                <div class="step-content">
-                    <h3>Receive Reality</h3>
-                    <p>Get brutally honest feedback with colorful charts to soften the blow</p>
+            
+            <div class="testimonial-card" data-animate>
+                <div class="testimonial-content">
+                    <i class="fas fa-quote-left"></i>
+                    <p>I paid $200 for vocal lessons after seeing my timbre analysis. Worth it.</p>
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="author-info">
+                        <h4>Lisa M.</h4>
+                        <p>Former Karaoke Queen</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -900,11 +235,16 @@
     <!-- Final CTA -->
     <section class="final-cta">
         <div class="cta-card" data-animate>
-            <h2>Ready to Have Your Dreams <span class="highlight">Shattered</span>?</h2>
-            <p>Join thousands of users who thought they could sing</p>
-            <a href="celebrity-delusion.html" class="cta-button cta-primary cta-large">
-                <i class="fas fa-microphone-alt"></i> Begin Your Downfall
-            </a>
+            <h2>Ready for Your <span class="highlight">Vocal Reality Check</span>?</h2>
+            <p>Join thousands who've braved the truth about their voice</p>
+            <div class="cta-buttons">
+                <a href="celebrity-delusion.html" class="cta-button cta-primary cta-large">
+                    <i class="fas fa-microphone-alt"></i> Start Analysis
+                </a>
+                <a href="#how-it-works" class="cta-button cta-secondary cta-large">
+                    <i class="fas fa-play-circle"></i> See Demo
+                </a>
+            </div>
         </div>
     </section>
 
@@ -913,10 +253,11 @@
         <div class="footer-content">
             <div class="footer-brand">
                 <img src="logo.png" alt="Vocary Logo" class="footer-logo">
-                <p>Vocal analysis for the delusional</p>
+                <p>Vocal analysis for the brave and curious</p>
                 <div class="social-links">
                     <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
                     <a href="#"><i class="fab fa-discord"></i></a>
                 </div>
             </div>
@@ -925,172 +266,37 @@
                     <h4>Features</h4>
                     <a href="celebrity-delusion.html">Celebrity Delusion</a>
                     <a href="pitch-police.html">Pitch Police</a>
+                    <a href="vocal-autopsy.html">Vocal Autopsy</a>
                     <a href="timbre-tattletale.html">Timbre Tattletale</a>
                 </div>
                 <div class="link-group">
+                    <h4>Resources</h4>
+                    <a href="#">Vocal Tips</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Research</a>
+                    <a href="#">FAQ</a>
+                </div>
+                <div class="link-group">
+                    <h4>Company</h4>
+                    <a href="#">About Us</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Contact</a>
+                    <a href="#">Press</a>
+                </div>
+                <div class="link-group">
                     <h4>Legal</h4>
-                    <a href="#">Terms of Disappointment</a>
-                    <a href="#">Privacy (LOL)</a>
-                    <a href="#">Cookie Monster</a>
+                    <a href="#">Terms</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Cookies</a>
+                    <a href="#">Disclaimer</a>
                 </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2025 Vocary | Made with <i class="fas fa-heart"></i> and sarcasm</p>
+            <p>© 2025 Vocary | Made with <i class="fas fa-heart"></i> and tough love</p>
         </div>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Space background animation
-            const constellation = document.getElementById('constellation');
-            const width = window.innerWidth;
-            const height = window.innerHeight;
-            
-            // Create stars
-            for (let i = 0; i < 200; i++) {
-                const star = document.createElement('div');
-                star.className = 'estrela';
-                
-                // Random position
-                const left = Math.random() * width;
-                const top = Math.random() * height;
-                
-                // Random styles
-                const size = Math.floor(Math.random() * 3) + 1;
-                const opacity = Math.floor(Math.random() * 3) + 1;
-                const style = Math.floor(Math.random() * 4) + 1;
-                
-                star.style.left = `${left}px`;
-                star.style.top = `${top}px`;
-                star.classList.add(`tam${size}`);
-                star.classList.add(`opacity${opacity}`);
-                star.classList.add(`style${style}`);
-                
-                constellation.appendChild(star);
-            }
-            
-            // Create meteors
-            function createMeteor() {
-                const meteor = document.createElement('div');
-                meteor.className = 'meteoro';
-                
-                // Random style
-                const style = Math.floor(Math.random() * 4) + 1;
-                meteor.classList.add(`style${style}`);
-                
-                constellation.appendChild(meteor);
-                
-                // Remove meteor after animation completes
-                setTimeout(() => {
-                    meteor.remove();
-                }, 1000);
-            }
-            
-            // Create meteors periodically
-            setInterval(createMeteor, 2000);
-            
-            // Initial meteors
-            for (let i = 0; i < 3; i++) {
-                setTimeout(createMeteor, i * 500);
-            }
-
-            // Mobile navigation toggle
-            const navToggle = document.querySelector('.nav-toggle');
-            const navLinks = document.querySelector('.nav-links');
-            
-            if (navToggle && navLinks) {
-                navToggle.addEventListener('click', () => {
-                    navLinks.classList.toggle('active');
-                });
-            }
-
-            // Scroll reveal animation
-            const animateOnScroll = function() {
-                const elements = document.querySelectorAll('[data-animate]');
-                
-                elements.forEach(element => {
-                    const elementPosition = element.getBoundingClientRect().top;
-                    const screenPosition = window.innerHeight / 1.3;
-                    
-                    if (elementPosition < screenPosition) {
-                        element.classList.add('animate');
-                    }
-                });
-            };
-
-            // Trigger animations on load and scroll
-            window.addEventListener('load', animateOnScroll);
-            window.addEventListener('scroll', animateOnScroll);
-
-            // Navbar scroll effect
-            window.addEventListener('scroll', function() {
-                const nav = document.querySelector('.space-nav');
-                if (window.scrollY > 50) {
-                    nav.classList.add('scrolled');
-                } else {
-                    nav.classList.remove('scrolled');
-                }
-            });
-
-            // Smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-                    
-                    const targetElement = document.querySelector(targetId);
-                    
-                    if (targetElement) {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 80,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-
-            // Voice wave animation
-            const voiceWave = document.getElementById('voiceWave');
-            if (voiceWave) {
-                const canvas = document.createElement('canvas');
-                canvas.width = voiceWave.offsetWidth;
-                canvas.height = voiceWave.offsetHeight;
-                voiceWave.appendChild(canvas);
-                
-                const ctx = canvas.getContext('2d');
-                let step = 0;
-                
-                const drawWave = () => {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    
-                    ctx.beginPath();
-                    ctx.lineWidth = 2;
-                    ctx.strokeStyle = '#9d4edd';
-                    
-                    const amplitude = canvas.height / 4;
-                    const frequency = 0.02;
-                    
-                    for (let x = 0; x < canvas.width; x++) {
-                        const y = canvas.height / 2 + amplitude * Math.sin(x * frequency + step);
-                        if (x === 0) {
-                            ctx.moveTo(x, y);
-                        } else {
-                            ctx.lineTo(x, y);
-                        }
-                    }
-                    
-                    ctx.stroke();
-                    
-                    step += 0.1;
-                    requestAnimationFrame(drawWave);
-                };
-                
-                drawWave();
-            }
-        });
-    </script>
+    <script src="common.js"></script>
 </body>
 </html>

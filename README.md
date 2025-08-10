@@ -1,7 +1,7 @@
 <img width="3188" height="1202" alt="frame (3)" src="https://github.com/user-attachments/assets/517ad8e9-ad22-457d-9538-a9e62d137cd7" />
 
 
-# Vocary - Vocal Analyzer 🎯
+# Vocary - Vocal Vanity Platform 🎯
 
 
 ## Basic Details
@@ -85,7 +85,7 @@ python app.py
 
 
 ## Additional Demos
-Live Demo Link ---> [(https://vocary.onrender.com](https://vocary.onrender.com)
+Live Demo Link ---> [https://vocary.onrender.com](https://vocary.onrender.com)
 
 Note⚠️: This demo instance runs on Render's free tier hence may not always work or atleast take time for deployement
 

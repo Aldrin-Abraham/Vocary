@@ -77,18 +77,6 @@ python app.py
 ## Screenshots
 <img width="1919" height="1079" alt="Vocary" src="https://github.com/user-attachments/assets/8751c7eb-bf78-4133-b4f2-b867e42708c3" />
 
-## Diagrams
-<img width="4425" height="3539" alt="Data Flow" src="https://github.com/user-attachments/assets/0878fce9-4b99-4c00-b30e-0c38ed030d2e" />
-
-# Project Demo
-## Video
-
-
-## Additional Demos
-Live Demo Link ---> [https://vocary.onrender.com](https://vocary.onrender.com)
-
-Note⚠️: This demo instance runs on Render's free tier hence may not always work or atleast take time for deployement
-
 ---
 Made with ❤️ at TinkerHub Useless Projects 
 
